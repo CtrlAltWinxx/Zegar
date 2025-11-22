@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>24h Timer – BHL</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: black;
+      overflow: hidden;
+      font-family: "Courier New", monospace;
+      color: #00ff41;
+      position: relative;
+    }
+
+    /* MATRIX ANIMATION */
+    canvas#matrix {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    /* LOGO */
+    #logo {
+      position: absolute;
+      top: 20px;
+      width: 260px;
+      opacity: 0.35;
+      z-index: 2;
+    }
+
+    /* MAIN CONTENT */
+    .container {
+      position: relative;
+      z-index: 3;
+      text-align: center;
+    }
+
+    #timer {
+      font-size: 6rem;
+      margin-bottom: 30px;
+      letter-spacing: 4px;
+      color: #4db8ff;
+      text-shadow: 0 0 25px #000000, 0 0 18px #4db8ff;
+      background: rgba(0, 0, 0, 0.75);
+      padding: 35px 70px;
+      border-radius: 16px;
+      display: inline-block;
+      font-weight: 900;
+    }
+
+    button {
+      padding: 12px 30px;
+      font-size: 1.4rem;
+      font-family: inherit;
+      background: rgba(0, 0, 0, 0.7);
+      border: 2px solid #4db8ff;
+      color: #4db8ff;
+      cursor: pointer;
+      transition: 0.3s;
+      border-radius: 10px;
+      text-shadow: 0 0 10px #4db8ff;
+      display: block;
+      margin: 20px auto 0 auto;
+      font-weight: 900;
+    }
+    button:hover {
+      background: #00ff4160;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="matrix"></canvas>
+  
+
+  <div class="container">
+    <div id="timer">24:00:00</div>
+    <button onclick="startTimer()" style="margin-top: 10px;">START</button>
+  </div>
+
+  <script>
+    /* MATRIX EFFECT */
+    const canvas = document.getElementById("matrix");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const characters = ["1","1","B","H","L"];
+    const chars = characters;("");
+
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+    const drops = [];
+
+    for (let i = 0; i < columns; i++) drops[i] = 1;
+
+    function drawMatrix() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "#4db8ff";
+      ctx.font = fontSize + "px monospace";
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = chars[drops[i] % chars.length];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      }
+    }
+
+    setInterval(drawMatrix, 60);
+
+    /* TIMER */
+    let timerInterval;
+    const timerDisplay = document.getElementById("timer");
+
+    function startTimer() {
+      if (timerInterval) return;
+
+      let remaining = 24 * 60 * 60; // 24h in seconds
+
+      timerInterval = setInterval(() => {
+        remaining--;
+        if (remaining <= 0) {
+          clearInterval(timerInterval);
+          timerDisplay.textContent = "00:00:00";
+          return;
+        }
+
+        const h = String(Math.floor(remaining / 3600)).padStart(2, "0");
+        const m = String(Math.floor((remaining % 3600) / 60)).padStart(2, "0");
+        const s = String(remaining % 60).padStart(2, "0");
+        timerDisplay.textContent = `${h}:${m}:${s}`;
+      }, 1000);
+    }
+  </script>
+
+</body>
+</html>
