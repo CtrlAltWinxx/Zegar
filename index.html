@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>24h BHL</title>
+  <title>24h Timer – BHL</title>
   <style>
     body {
       margin: 0;
@@ -15,11 +15,10 @@
       background: black;
       overflow: hidden;
       font-family: "Courier New", monospace;
-      color: #00ff41;
+      color: #4db8ff;
       position: relative;
     }
 
-    /* MATRIX ANIMATION */
     canvas#matrix {
       position: absolute;
       top: 0;
@@ -29,38 +28,30 @@
       z-index: 1;
     }
 
-    /* LOGO */
-    #logo {
-      position: absolute;
-      top: 20px;
-      width: 260px;
-      opacity: 0.35;
-      z-index: 2;
-    }
-
-    /* MAIN CONTENT */
     .container {
       position: relative;
       z-index: 3;
       text-align: center;
+      width: 100%;
+      padding: 20px;
     }
 
     #timer {
-      font-size: 6rem;
+      font-size: clamp(3rem, 8vw, 7rem);
       margin-bottom: 30px;
       letter-spacing: 4px;
       color: #4db8ff;
       text-shadow: 0 0 25px #000000, 0 0 18px #4db8ff;
       background: rgba(0, 0, 0, 0.75);
-      padding: 35px 70px;
+      padding: 5vw 8vw;
       border-radius: 16px;
       display: inline-block;
       font-weight: 900;
     }
 
     button {
-      padding: 12px 30px;
-      font-size: 1.4rem;
+      padding: 14px 35px;
+      font-size: clamp(1rem, 3vw, 1.6rem);
       font-family: inherit;
       background: rgba(0, 0, 0, 0.7);
       border: 2px solid #4db8ff;
@@ -73,8 +64,11 @@
       margin: 20px auto 0 auto;
       font-weight: 900;
     }
-    button:hover {
-      background: #00ff4160;
+
+    @media (max-width: 600px) {
+      #timer {
+        padding: 20px;
+      }
     }
   </style>
 </head>
@@ -89,7 +83,7 @@
   </div>
 
   <script>
-    /* MATRIX EFFECT */
+  
     const canvas = document.getElementById("matrix");
     const ctx = canvas.getContext("2d");
 
@@ -123,14 +117,13 @@
 
     setInterval(drawMatrix, 60);
 
-    /* TIMER */
     let timerInterval;
     const timerDisplay = document.getElementById("timer");
 
     function startTimer() {
       if (timerInterval) return;
 
-      let remaining = 24 * 60 * 60; // 24h in seconds
+      let remaining = 24 * 60 * 60; 
 
       timerInterval = setInterval(() => {
         remaining--;
@@ -150,4 +143,3 @@
 
 </body>
 </html>
-
