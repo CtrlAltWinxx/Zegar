@@ -6,7 +6,6 @@
   <title>24h BHL</title>
 
   <style>
-    /* BODY I PODSTAWOWE USTAWIENIA */
     body {
       margin: 0;
       padding: 0;
@@ -30,7 +29,6 @@
       z-index: 1;
     }
 
-    /* KONTEKST FLEX - CAŁY ŚRODEK */
     .container {
       position: relative;
       z-index: 3;
@@ -45,7 +43,6 @@
       box-sizing: border-box;
     }
 
-    /* ZEGAR */
     #timer {
       font-size: clamp(3rem, 10vw, 10rem);
       margin: 0;
@@ -59,7 +56,6 @@
       word-wrap: break-word;
     }
 
-    /* LOGO STATYCZNE, WYŚRODKOWANE */
     #logo {
       display: none;
       width: 25%;
@@ -72,7 +68,6 @@
       transition: opacity 1.2s ease;
     }
 
-    /* PRZYCISK */
     button {
       padding: clamp(10px, 2vw, 16px) clamp(20px, 4vw, 35px);
       font-size: clamp(0.9rem, 3vw, 1.5rem);
@@ -87,7 +82,6 @@
       font-weight: 900;
     }
 
-    /* WYŁADOWANIE */
     #electricFlash {
       position: fixed;
       width: 100vw;
@@ -124,7 +118,6 @@
   </div>
 
   <script>
-    // MATRIX
     const canvas = document.getElementById("matrix");
     const ctx = canvas.getContext("2d");
 
@@ -158,7 +151,6 @@
     }
     setInterval(drawMatrix, 60);
 
-    // TIMER + START
     let timerInterval;
     const timerDisplay = document.getElementById("timer");
     const logo = document.getElementById("logo");
@@ -171,10 +163,8 @@
       startBtn.style.display = "none";
       logo.style.display = "block";
 
-      // efekt wyładowania
       electricFlash.style.animation = "flash 0.7s ease";
 
-      // delikatne pojawienie logo
       setTimeout(() => {
         logo.style.opacity = "1";
       }, 150);
@@ -199,3 +189,4 @@
 
 </body>
 </html>
+
