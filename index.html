@@ -44,11 +44,12 @@
       color: #4db8ff;
       text-shadow: 0 0 25px #000000, 0 0 18px #4db8ff;
       background: rgba(0, 0, 0, 0.75);
-      padding: 5vw 10vw;
+      padding: clamp(10px, 5vw, 40px);
       border-radius: 16px;
       display: inline-block;
       font-weight: 900;
     }
+
     #logo {
       display: none;
       width: 18vw;
@@ -57,7 +58,6 @@
       opacity: 0;              
       transform: scale(1);     
       filter: drop-shadow(0 0 12px #4db8ff); 
-
       transition: opacity 1.2s ease; 
     }
 
@@ -95,6 +95,21 @@
       70% { opacity: 0.9; }
       100% { opacity: 0; }
     }
+
+    @media (max-width: 480px) {
+      #timer {
+        padding: 10vw 5vw;
+        letter-spacing: 3px;
+      }
+
+      #logo {
+        width: 35vw;
+      }
+
+      button {
+        padding: 12px 25px;
+      }
+    }
   </style>
 </head>
 
@@ -116,15 +131,25 @@
     const canvas = document.getElementById("matrix");
     const ctx = canvas.getContext("2d");
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
 
     const chars = ["1","1","B","H","L"];
     const fontSize = 14;
-    const columns = canvas.width / fontSize;
-    const drops = Array.from({ length: columns }, () => 1);
+    let columns = canvas.width / fontSize;
+    let drops = Array.from({ length: columns }, () => 1);
 
     function drawMatrix() {
+      if (drops.length !== columns) {
+        columns = canvas.width / fontSize;
+        drops = Array.from({ length: columns }, () => 1);
+      }
+
       ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -181,4 +206,3 @@
 
 </body>
 </html>
-
