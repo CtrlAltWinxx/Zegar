@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>24h BHL</title>
+
   <style>
     body {
       margin: 0;
@@ -37,16 +38,31 @@
     }
 
     #timer {
-      font-size: clamp(3rem, 8vw, 7rem);
+      font-size: clamp(5rem, 12vw, 12rem);
       margin-bottom: 30px;
-      letter-spacing: 4px;
+      letter-spacing: 6px;
       color: #4db8ff;
       text-shadow: 0 0 25px #000000, 0 0 18px #4db8ff;
       background: rgba(0, 0, 0, 0.75);
-      padding: 5vw 8vw;
+      padding: 5vw 10vw;
       border-radius: 16px;
       display: inline-block;
       font-weight: 900;
+    }
+
+    /* -----------------------------------------
+       SPOKOJNE LOGO — zero animacji
+    ------------------------------------------ */
+    #logo {
+      display: none;
+      width: 18vw;
+      max-width: 160px;
+      margin: 20px auto 0 auto;
+      opacity: 0;              /* pojawienie po starcie */
+      transform: scale(1);     /* bez ruchu */
+      filter: drop-shadow(0 0 12px #4db8ff); /* delikatny stały glow */
+
+      transition: opacity 1.2s ease; /* tylko łagodne pojawienie */
     }
 
     button {
@@ -65,39 +81,53 @@
       font-weight: 900;
     }
 
-    @media (max-width: 600px) {
-      #timer {
-        padding: 20px;
-      }
+    /* Wyładowanie przy starcie */
+    #electricFlash {
+      position: fixed;
+      width: 100vw;
+      height: 100vh;
+      top: 0; left: 0;
+      background: radial-gradient(circle, rgba(0,180,255,0.7), transparent 70%);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    @keyframes flash {
+      0% { opacity: 0; }
+      25% { opacity: 0.8; }
+      50% { opacity: 0.3; }
+      70% { opacity: 0.9; }
+      100% { opacity: 0; }
     }
   </style>
 </head>
+
 <body>
 
   <canvas id="matrix"></canvas>
-  
+
+  <div id="electricFlash"></div>
 
   <div class="container">
     <div id="timer">24:00:00</div>
-    <button onclick="startTimer()" style="margin-top: 10px;">START</button>
+
+    <img id="logo" src="grafika.jpg" alt="Logo">
+
+    <button id="startBtn" onclick="startTimer()">START</button>
   </div>
 
   <script>
-  
     const canvas = document.getElementById("matrix");
     const ctx = canvas.getContext("2d");
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const characters = ["1","1","B","H","L"];
-    const chars = characters;("");
-
+    const chars = ["1","1","B","H","L"];
     const fontSize = 14;
     const columns = canvas.width / fontSize;
-    const drops = [];
-
-    for (let i = 0; i < columns; i++) drops[i] = 1;
+    const drops = Array.from({ length: columns }, () => 1);
 
     function drawMatrix() {
       ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
@@ -110,7 +140,8 @@
         const text = chars[drops[i] % chars.length];
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
 
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
+          drops[i] = 0;
         drops[i]++;
       }
     }
@@ -119,11 +150,24 @@
 
     let timerInterval;
     const timerDisplay = document.getElementById("timer");
+    const logo = document.getElementById("logo");
+    const startBtn = document.getElementById("startBtn");
+    const electricFlash = document.getElementById("electricFlash");
 
     function startTimer() {
       if (timerInterval) return;
 
-      let remaining = 24 * 60 * 60; 
+      startBtn.style.display = "none";  
+      logo.style.display = "block";
+
+      electricFlash.style.animation = "flash 0.7s ease";
+
+      /* delikatne pojawienie */
+      setTimeout(() => {
+        logo.style.opacity = "1";
+      }, 150);
+
+      let remaining = 24 * 60 * 60;
 
       timerInterval = setInterval(() => {
         remaining--;
@@ -143,4 +187,3 @@
 
 </body>
 </html>
-
