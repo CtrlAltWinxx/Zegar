@@ -6,6 +6,7 @@
   <title>24h BHL</title>
 
   <style>
+    /* BODY I PODSTAWOWE USTAWIENIA */
     body {
       margin: 0;
       padding: 0;
@@ -29,41 +30,49 @@
       z-index: 1;
     }
 
+    /* KONTEKST FLEX - CAŁY ŚRODEK */
     .container {
       position: relative;
       z-index: 3;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       text-align: center;
-      width: 90%;
-      max-width: 800px;
+      width: 100%;
+      max-width: 900px;
       padding: 10px;
+      box-sizing: border-box;
     }
 
+    /* ZEGAR */
     #timer {
       font-size: clamp(3rem, 10vw, 10rem);
-      margin-bottom: 20px;
+      margin: 0;
       letter-spacing: clamp(2px, 1vw, 6px);
       color: #4db8ff;
       text-shadow: 0 0 25px #000000, 0 0 18px #4db8ff;
       background: rgba(0, 0, 0, 0.75);
-      padding: 4vw 6vw;
+      padding: 2vw 4vw;
       border-radius: 16px;
-      display: inline-block;
       font-weight: 900;
       word-wrap: break-word;
     }
 
+    /* LOGO STATYCZNE, WYŚRODKOWANE */
     #logo {
       display: none;
-      width: 40%;
+      width: 25%;
       max-width: 200px;
       min-width: 100px;
-      margin: 20px auto 0 auto;
+      margin: 20px 0 0 0;
       opacity: 0;
       transform: scale(1);
       filter: drop-shadow(0 0 12px #4db8ff);
       transition: opacity 1.2s ease;
     }
 
+    /* PRZYCISK */
     button {
       padding: clamp(10px, 2vw, 16px) clamp(20px, 4vw, 35px);
       font-size: clamp(0.9rem, 3vw, 1.5rem);
@@ -74,11 +83,11 @@
       cursor: pointer;
       transition: 0.3s;
       border-radius: 10px;
-      display: block;
-      margin: 15px auto 0 auto;
+      margin: 20px 0 0 0;
       font-weight: 900;
     }
 
+    /* WYŁADOWANIE */
     #electricFlash {
       position: fixed;
       width: 100vw;
@@ -115,7 +124,7 @@
   </div>
 
   <script>
-    
+    // MATRIX
     const canvas = document.getElementById("matrix");
     const ctx = canvas.getContext("2d");
 
@@ -149,6 +158,7 @@
     }
     setInterval(drawMatrix, 60);
 
+    // TIMER + START
     let timerInterval;
     const timerDisplay = document.getElementById("timer");
     const logo = document.getElementById("logo");
@@ -161,8 +171,10 @@
       startBtn.style.display = "none";
       logo.style.display = "block";
 
+      // efekt wyładowania
       electricFlash.style.animation = "flash 0.7s ease";
 
+      // delikatne pojawienie logo
       setTimeout(() => {
         logo.style.opacity = "1";
       }, 150);
