@@ -49,20 +49,16 @@
       display: inline-block;
       font-weight: 900;
     }
-
-    /* -----------------------------------------
-       SPOKOJNE LOGO — zero animacji
-    ------------------------------------------ */
     #logo {
       display: none;
       width: 18vw;
       max-width: 160px;
       margin: 20px auto 0 auto;
-      opacity: 0;              /* pojawienie po starcie */
-      transform: scale(1);     /* bez ruchu */
-      filter: drop-shadow(0 0 12px #4db8ff); /* delikatny stały glow */
+      opacity: 0;              
+      transform: scale(1);     
+      filter: drop-shadow(0 0 12px #4db8ff); 
 
-      transition: opacity 1.2s ease; /* tylko łagodne pojawienie */
+      transition: opacity 1.2s ease; 
     }
 
     button {
@@ -81,7 +77,6 @@
       font-weight: 900;
     }
 
-    /* Wyładowanie przy starcie */
     #electricFlash {
       position: fixed;
       width: 100vw;
@@ -162,7 +157,6 @@
 
       electricFlash.style.animation = "flash 0.7s ease";
 
-      /* delikatne pojawienie */
       setTimeout(() => {
         logo.style.opacity = "1";
       }, 150);
@@ -187,3 +181,4 @@
 
 </body>
 </html>
+
