@@ -33,36 +33,40 @@
       position: relative;
       z-index: 3;
       text-align: center;
-      width: 100%;
-      padding: 20px;
+      width: 90%;
+      max-width: 800px;
+      padding: 10px;
     }
 
     #timer {
-      font-size: clamp(5rem, 12vw, 12rem);
-      margin-bottom: 30px;
-      letter-spacing: 6px;
+      font-size: clamp(3rem, 10vw, 10rem);
+      margin-bottom: 20px;
+      letter-spacing: clamp(2px, 1vw, 6px);
       color: #4db8ff;
       text-shadow: 0 0 25px #000000, 0 0 18px #4db8ff;
       background: rgba(0, 0, 0, 0.75);
-      padding: clamp(10px, 5vw, 40px);
+      padding: 4vw 6vw;
       border-radius: 16px;
       display: inline-block;
       font-weight: 900;
+      word-wrap: break-word;
     }
 
     #logo {
       display: none;
-      width: 18vw;
-      max-width: 160px;
+      width: 40%;
+      max-width: 200px;
+      min-width: 100px;
       margin: 20px auto 0 auto;
-      opacity: 0;              
-      filter: drop-shadow(0 0 12px #4db8ff); 
-      transition: opacity 1.2s ease; 
+      opacity: 0;
+      transform: scale(1);
+      filter: drop-shadow(0 0 12px #4db8ff);
+      transition: opacity 1.2s ease;
     }
 
     button {
-      padding: 14px 35px;
-      font-size: clamp(1rem, 3vw, 1.6rem);
+      padding: clamp(10px, 2vw, 16px) clamp(20px, 4vw, 35px);
+      font-size: clamp(0.9rem, 3vw, 1.5rem);
       font-family: inherit;
       background: rgba(0, 0, 0, 0.7);
       border: 2px solid #4db8ff;
@@ -70,9 +74,8 @@
       cursor: pointer;
       transition: 0.3s;
       border-radius: 10px;
-      text-shadow: 0 0 10px #4db8ff;
       display: block;
-      margin: 20px auto 0 auto;
+      margin: 15px auto 0 auto;
       font-weight: 900;
     }
 
@@ -94,21 +97,6 @@
       70% { opacity: 0.9; }
       100% { opacity: 0; }
     }
-
-    @media (max-width: 480px) {
-      #timer {
-        padding: 10vw 5vw;
-        letter-spacing: 3px;
-      }
-
-      #logo {
-        width: 35vw;
-      }
-
-      button {
-        padding: 12px 25px;
-      }
-    }
   </style>
 </head>
 
@@ -127,29 +115,21 @@
   </div>
 
   <script>
+    
     const canvas = document.getElementById("matrix");
     const ctx = canvas.getContext("2d");
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      updateMatrix();
     }
-
     window.addEventListener("resize", resizeCanvas);
     resizeCanvas();
 
     const chars = ["1","1","B","H","L"];
     const fontSize = 14;
-    let columns;
-    let drops;
-
-    function updateMatrix() {
-      columns = Math.floor(canvas.width / fontSize);
-      drops = Array.from({ length: columns }, () => 1);
-    }
-
-    updateMatrix();
+    let columns = Math.floor(canvas.width / fontSize);
+    let drops = Array.from({ length: columns }, () => 1);
 
     function drawMatrix() {
       ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
@@ -167,7 +147,6 @@
         drops[i]++;
       }
     }
-
     setInterval(drawMatrix, 60);
 
     let timerInterval;
@@ -179,7 +158,7 @@
     function startTimer() {
       if (timerInterval) return;
 
-      startBtn.style.display = "none";  
+      startBtn.style.display = "none";
       logo.style.display = "block";
 
       electricFlash.style.animation = "flash 0.7s ease";
