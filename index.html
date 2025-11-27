@@ -2,68 +2,67 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>24h BHL</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
       margin: 0;
       padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       background: black;
       overflow: hidden;
       font-family: "Courier New", monospace;
       color: #4db8ff;
+      position: relative;
     }
 
     canvas#matrix {
-      position: fixed;
+      position: absolute;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       z-index: 1;
-      display: block;
     }
 
     .container {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
+      position: relative;
       z-index: 3;
+      text-align: center;
       width: 100%;
       padding: 20px;
     }
 
     #timer {
-      font-size: clamp(3rem, 15vw, 11rem);
-      letter-spacing: 5px;
-      background: rgba(0, 0, 0, 0.7);
-      padding: 20px;
+      font-size: clamp(5rem, 12vw, 12rem);
+      margin-bottom: 30px;
+      letter-spacing: 6px;
+      color: #4db8ff;
+      text-shadow: 0 0 25px #000000, 0 0 18px #4db8ff;
+      background: rgba(0, 0, 0, 0.75);
+      padding: clamp(10px, 5vw, 40px);
       border-radius: 16px;
-      text-shadow: 0 0 20px #4db8ff;
       display: inline-block;
       font-weight: 900;
-      margin-bottom: 20px;
     }
 
     #logo {
       display: none;
-      width: 150px;
-      margin-top: 25px;
-      opacity: 0;
-      filter: drop-shadow(0 0 12px #4db8ff);
-      transition: opacity 1.3s ease;
+      width: 18vw;
+      max-width: 160px;
+      margin: 20px auto 0 auto;
+      opacity: 0;              
+      filter: drop-shadow(0 0 12px #4db8ff); 
+      transition: opacity 1.2s ease; 
     }
 
     button {
       padding: 14px 35px;
-      font-size: clamp(1rem, 4vw, 1.6rem);
+      font-size: clamp(1rem, 3vw, 1.6rem);
       font-family: inherit;
       background: rgba(0, 0, 0, 0.7);
       border: 2px solid #4db8ff;
@@ -72,16 +71,16 @@
       transition: 0.3s;
       border-radius: 10px;
       text-shadow: 0 0 10px #4db8ff;
+      display: block;
+      margin: 20px auto 0 auto;
       font-weight: 900;
-      margin-top: 20px;
     }
 
     #electricFlash {
       position: fixed;
       width: 100vw;
       height: 100vh;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
       background: radial-gradient(circle, rgba(0,180,255,0.7), transparent 70%);
       opacity: 0;
       pointer-events: none;
@@ -94,6 +93,21 @@
       50% { opacity: 0.3; }
       70% { opacity: 0.9; }
       100% { opacity: 0; }
+    }
+
+    @media (max-width: 480px) {
+      #timer {
+        padding: 10vw 5vw;
+        letter-spacing: 3px;
+      }
+
+      #logo {
+        width: 35vw;
+      }
+
+      button {
+        padding: 12px 25px;
+      }
     }
   </style>
 </head>
@@ -116,48 +130,45 @@
     const canvas = document.getElementById("matrix");
     const ctx = canvas.getContext("2d");
 
-    function fixCanvasSize() {
+    function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      updateMatrix();
     }
 
-    fixCanvasSize();
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
 
-    let chars = ["1","B","H","L"];
-    let fontSize = 14;
-    let columns = Math.floor(window.innerWidth / fontSize);
-    let drops = Array.from({ length: columns }, () => 1);
+    const chars = ["1","1","B","H","L"];
+    const fontSize = 14;
+    let columns;
+    let drops;
 
-    function resetMatrix() {
-      columns = Math.floor(window.innerWidth / fontSize);
+    function updateMatrix() {
+      columns = Math.floor(canvas.width / fontSize);
       drops = Array.from({ length: columns }, () => 1);
     }
 
-    window.addEventListener("resize", () => {
-      fixCanvasSize();
-      resetMatrix();
-    });
+    updateMatrix();
 
     function drawMatrix() {
-      ctx.fillStyle = "rgba(0,0,0,0.07)";
+      ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       ctx.fillStyle = "#4db8ff";
       ctx.font = fontSize + "px monospace";
 
       for (let i = 0; i < drops.length; i++) {
-        const char = chars[Math.floor(Math.random() * chars.length)];
-        ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+        const text = chars[drops[i] % chars.length];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
 
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
           drops[i] = 0;
-        }
-
         drops[i]++;
       }
     }
 
-    setInterval(drawMatrix, 50);
+    setInterval(drawMatrix, 60);
 
     let timerInterval;
     const timerDisplay = document.getElementById("timer");
@@ -168,20 +179,19 @@
     function startTimer() {
       if (timerInterval) return;
 
-      startBtn.style.display = "none";
+      startBtn.style.display = "none";  
       logo.style.display = "block";
 
       electricFlash.style.animation = "flash 0.7s ease";
 
       setTimeout(() => {
         logo.style.opacity = "1";
-      }, 200);
+      }, 150);
 
       let remaining = 24 * 60 * 60;
 
       timerInterval = setInterval(() => {
         remaining--;
-
         if (remaining <= 0) {
           clearInterval(timerInterval);
           timerDisplay.textContent = "00:00:00";
@@ -191,7 +201,6 @@
         const h = String(Math.floor(remaining / 3600)).padStart(2, "0");
         const m = String(Math.floor((remaining % 3600) / 60)).padStart(2, "0");
         const s = String(remaining % 60).padStart(2, "0");
-
         timerDisplay.textContent = `${h}:${m}:${s}`;
       }, 1000);
     }
